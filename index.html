@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Treinador de Lógica</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #0f3460;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    .desafio {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 300px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0198a5;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .correto {
+      color: #00ff99;
+    }
+
+    .incorreto {
+      color: #ff4d4d;
+    }
+
+    .dica {
+      font-style: italic;
+      font-size: 0.9em;
+      color: #ccc;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Treine sua Lógica</h1>
+    <div class="desafio" id="pergunta">Carregando desafio...</div>
+    <input type="text" id="resposta" placeholder="Digite sua resposta" />
+    <br><br>
+    <button onclick="verificarResposta()">Verificar</button>
+    <div class="feedback" id="feedback"></div>
+    <div class="dica" id="dica"></div>
+    <br>
+    <button onclick="proximoDesafio()">Próximo desafio</button>
+  </div>
+
+  <script>
+    const desafios = [
+      {
+        pergunta: "Qual o próximo número da sequência? 2, 4, 6, 8, ?",
+        resposta: "10",
+        dica: "Pense em múltiplos de 2."
+      },
+      {
+        pergunta: "Se x = 5, quanto é x * (x - 1)?",
+        resposta: "20",
+        dica: "Substitua x por 5 e resolva a multiplicação."
+      },
+      {
+        pergunta: "Qual valor final de y se y = 2; y += 3; y *= 2?",
+        resposta: "10",
+        dica: "Faça passo a passo cada operação."
+      },
+      {
+        pergunta: "Quantos zeros tem o número 1000?",
+        resposta: "3",
+        dica: "Conte os dígitos zero no número."
+      },
+      {
+        pergunta: "Qual o resultado de (3 + 2) * 2?",
+        resposta: "10",
+        dica: "Resolva primeiro o que está entre parênteses."
+      }
+    ];
+
+    let indiceAtual = 0;
+
+    function carregarDesafio() {
+      const desafio = desafios[indiceAtual];
+      document.getElementById('pergunta').textContent = desafio.pergunta;
+      document.getElementById('resposta').value = "";
+      document.getElementById('feedback').textContent = "";
+      document.getElementById('feedback').className = "feedback";
+      document.getElementById('dica').textContent = "";
+    }
+
+    function verificarResposta() {
+      const respostaUsuario = document.getElementById('resposta').value.trim();
+      const desafio = desafios[indiceAtual];
+      const feedback = document.getElementById('feedback');
+
+      if (respostaUsuario === desafio.resposta) {
+        feedback.textContent = "✅ Resposta correta!";
+        feedback.classList.add("correto");
+      } else {
+        feedback.textContent = "❌ Resposta incorreta!";
+        feedback.classList.add("incorreto");
+        document.getElementById('dica').textContent = "💡 Dica: " + desafio.dica;
+      }
+    }
+
+    function proximoDesafio() {
+      indiceAtual = (indiceAtual + 1) % desafios.length;
+      carregarDesafio();
+    }
+
+    window.onload = carregarDesafio;
+  </script>
+</body>
+</html>
