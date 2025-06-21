@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Treinador de Lógica</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #0f3460;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+
+    select, input, button {
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0198a5;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .correto {
+      color: #00ff99;
+    }
+
+    .incorreto {
+      color: #ff4d4d;
+    }
+
+    .dica {
+      font-style: italic;
+      font-size: 0.9em;
+      color: #ccc;
+      margin-top: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="menu">
+    <h1>🧠 Treine sua Lógica</h1>
+    <p>Escolha a categoria e o nível:</p>
+    <select id="categoria">
+      <option value="">Todas as categorias</option>
+      <option value="sequência">Sequência</option>
+      <option value="aritmética">Aritmética</option>
+      <option value="variáveis">Variáveis</option>
+      <option value="loops">Loops</option>
+      <option value="condicional">Condicional</option>
+      <option value="arrays">Arrays</option>
+      <option value="javascript">JavaScript</option>
+    </select><br>
+    <select id="nivel">
+      <option value="">Todos os níveis</option>
+      <option value="fácil">Fácil</option>
+      <option value="médio">Médio</option>
+    </select><br>
+    <button onclick="iniciarDesafios()">Começar</button>
+  </div>
+
+  <div class="container hidden" id="app">
+    <div class="desafio" id="pergunta">Carregando desafio...</div>
+    <input type="text" id="resposta" placeholder="Digite sua resposta" />
+    <br>
+    <button onclick="verificarResposta()">Verificar</button>
+    <div class="feedback" id="feedback"></div>
+    <div class="dica" id="dica"></div>
+    <br>
+    <button onclick="proximoDesafio()">Próximo desafio</button>
+  </div>
+
+  <script>
+    const desafios = [{'pergunta': 'Qual o próximo número da sequência? 2, 4, 6, 8, ?', 'resposta': '10', 'dica': 'Pense em múltiplos de 2.', 'categoria': 'sequência', 'nivel': 'fácil'}, {'pergunta': 'Se x = 5, quanto é x * (x - 1)?', 'resposta': '20', 'dica': 'Substitua x por 5 e resolva a multiplicação.', 'categoria': 'aritmética', 'nivel': 'fácil'}, {'pergunta': 'Qual valor final de y se y = 2; y += 3; y *= 2?', 'resposta': '10', 'dica': 'Faça passo a passo cada operação.', 'categoria': 'variáveis', 'nivel': 'fácil'}, {'pergunta': "Qual a saída do código: console.log(2 + '2')", 'resposta': '22', 'dica': 'Concatenar string com número em JavaScript.', 'categoria': 'javascript', 'nivel': 'médio'}, {'pergunta': 'Qual o valor final de x? let x = 10; x %= 4;', 'resposta': '2', 'dica': 'É o resto da divisão de 10 por 4.', 'categoria': 'aritmética', 'nivel': 'fácil'}, {'pergunta': 'Quantas vezes este laço será executado? for (let i = 0; i < 5; i++) { ... }', 'resposta': '5', 'dica': 'Começa do 0 e vai até 4.', 'categoria': 'loops', 'nivel': 'fácil'}, {'pergunta': 'Qual o valor de x ao final?\nx = 1;\npara i = 1 até 3:\n  x *= i', 'resposta': '6', 'dica': 'Multiplique 1×1×2×3.', 'categoria': 'loops', 'nivel': 'médio'}, {'pergunta': 'Qual o resultado de 2 ** 3 em JavaScript?', 'resposta': '8', 'dica': 'É 2 elevado à 3ª potência.', 'categoria': 'aritmética', 'nivel': 'fácil'}, {'pergunta': 'Qual a saída de:\nlet x = 5;\nif (x > 3) { x = 10 }', 'resposta': '10', 'dica': 'x é maior que 3.', 'categoria': 'condicional', 'nivel': 'fácil'}, {'pergunta': 'Dado o array: [1,2,3,4]. Qual é o valor de arr[2]?', 'resposta': '3', 'dica': 'Comece a contagem no índice 0.', 'categoria': 'arrays', 'nivel': 'fácil'}, {'pergunta': 'Qual o valor de x após: let x = 4; x++; x += 2;', 'resposta': '7', 'dica': 'x++ soma 1, depois soma mais 2.', 'categoria': 'variáveis', 'nivel': 'fácil'}, {'pergunta': 'Qual o resultado de: Boolean(0) em JavaScript?', 'resposta': 'false', 'dica': 'Zero é considerado falso.', 'categoria': 'javascript', 'nivel': 'médio'}, {'pergunta': "Qual será a saída: '5' == 5 em JavaScript?", 'resposta': 'true', 'dica': 'Comparação com coerção de tipo.', 'categoria': 'javascript', 'nivel': 'médio'}, {'pergunta': "Qual será a saída: '5' === 5 em JavaScript?", 'resposta': 'false', 'dica': 'Comparação sem coerção de tipo (tipo e valor).', 'categoria': 'javascript', 'nivel': 'médio'}, {'pergunta': 'Quantas vezes o código abaixo roda?\nfor(let i=0; i<3; i++) { console.log(i); }', 'resposta': '3', 'dica': 'i será 0, 1 e 2.', 'categoria': 'loops', 'nivel': 'fácil'}, {'pergunta': 'Qual o valor final de: let x = 2; x *= 3; x -= 1;', 'resposta': '5', 'dica': 'Multiplica por 3 e subtrai 1.', 'categoria': 'variáveis', 'nivel': 'médio'}, {'pergunta': 'Qual o valor final de: let x = 5; x = x + x;', 'resposta': '10', 'dica': 'x é somado com ele mesmo.', 'categoria': 'variáveis', 'nivel': 'fácil'}];
+    let desafiosFiltrados = [];
+    let indiceAtual = 0;
+
+    function iniciarDesafios() {
+      const categoria = document.getElementById("categoria").value;
+      const nivel = document.getElementById("nivel").value;
+
+      desafiosFiltrados = desafios.filter(d => 
+        (categoria === "" || d.categoria === categoria) &&
+        (nivel === "" || d.nivel === nivel)
+      );
+
+      if (desafiosFiltrados.length === 0) {
+        alert("Nenhum desafio encontrado com os filtros selecionados.");
+        return;
+      }
+
+      indiceAtual = 0;
+      document.getElementById("menu").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      carregarDesafio();
+    }
+
+    function carregarDesafio() {
+      const desafio = desafiosFiltrados[indiceAtual];
+      document.getElementById('pergunta').textContent = desafio.pergunta;
+      document.getElementById('resposta').value = "";
+      document.getElementById('feedback').textContent = "";
+      document.getElementById('feedback').className = "feedback";
+      document.getElementById('dica').textContent = "";
+    }
+
+    function verificarResposta() {
+      const respostaUsuario = document.getElementById('resposta').value.trim();
+      const desafio = desafiosFiltrados[indiceAtual];
+      const feedback = document.getElementById('feedback');
+
+      if (respostaUsuario === desafio.resposta) {
+        feedback.textContent = "✅ Resposta correta!";
+        feedback.classList.add("correto");
+      } else {
+        feedback.textContent = "❌ Resposta incorreta!";
+        feedback.classList.add("incorreto");
+        document.getElementById('dica').textContent = "💡 Dica: " + desafio.dica;
+      }
+    }
+
+    function proximoDesafio() {
+      indiceAtual = (indiceAtual + 1) % desafiosFiltrados.length;
+      carregarDesafio();
+    }
+  </script>
+</body>
+</html>
